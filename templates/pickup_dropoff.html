@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarRentalX</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+    <style>
+        body {
+            background-image: url('https://rentsyst.com/assets/2cda8e3/img/svg/top-carsharing-img.svg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .thin-section {
+            background-color: #f0f0f0; /* Updated background color */
+            padding: 10px 20px; /* Adjusted padding */
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .thin-section label {
+            padding: 5px 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .thin-section .dropdown {
+            margin-right: 10px;
+        }
+
+        .section {
+            background-color: #f0f0f0;  /* Adjusted background color */
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Dark theme */
+        .dark-theme {
+            background-color: #333;
+        }
+
+        .dark-text {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="text-3xl font-bold">CarRentalX</h1>
+    </div>
+
+    <div class="thin-section">
+        <!-- Content for the thin section -->
+        <span class="mr-4">Welcome, {{ username }}</span>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Logout</button>
+        </form>
+        <div class="dropdown">
+            <button class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Theme</button>
+            <div class="dropdown-content">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Dark Theme</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Light Theme</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Content for the third section -->
+        <h2 class="text-2xl font-semibold mb-4">Explore More</h2>
+        <ul class="flex flex-wrap justify-center">
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('home') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Home</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('booking_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Booking Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('browse_vehicles') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Browse Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('manage_bookings') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Manage Bookings</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pickup_dropoff') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Select Pickup and Dropoff Locations</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('vehicle_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Vehicle Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pricing') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">View Pricing of Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('book_vehicle') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Book Vehicle</a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Section for pickup and dropoff locations -->
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-4">Select Pickup and Dropoff Locations</h2>
+        <div class="flex justify-center items-center">
+            <!-- Pickup location input -->
+            <div class="input-group mr-4">
+                <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                <input type="text" id="start" class="form-control" placeholder="Enter pickup point">
+                <!-- Suggestions dropdown for pickup location -->
+                <div id="startSuggestions" class="suggestions"></div>
+            </div>
+            <!-- Dropoff location input -->
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                <input type="text" id="end" class="form-control" placeholder="Enter dropoff point">
+                <!-- Suggestions dropdown for dropoff location -->
+                <div id="endSuggestions" class="suggestions"></div>
+            </div>
+        </div>
+
+        <!-- Map interface section -->
+        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Tagline for the project -->
+        <h2 class="text-2xl font-semibold mb-4">Car Availability</h2>
+        
+        <!-- Container for displaying available cars -->
+        <div id="availabilityContainer"></div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Tagline for the project -->
+        <h2 class="text-2xl font-semibold mb-4"></h2>
+        <a href="{{ url_for('book_vehicle') }}">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Book Now
+            </button>
+        </a>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Tagline for the project -->
+        <h2 class="text-2xl font-semibold mb-4">Your Trusted Car Rental Partner</h2>
+        <!-- Image -->
+        <img src="https://rentsyst.com/assets/5621b12e/img/svg/top-leasing-img.svg" alt="Leasing Image" class="mx-auto max-w-full mt-4">
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 CarRentalX. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Get the dropdown content and buttons
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const darkThemeBtn = dropdownContent.querySelector('a:nth-child(1)');
+        const lightThemeBtn = dropdownContent.querySelector('a:nth-child(2)');
+
+        // Dark theme functionality
+        darkThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Change background color of sections
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.add('dark-theme');
+            });
+            // Change text color
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.add('dark-text');
+            });
+        });
+
+        // Light theme functionality
+        lightThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove dark theme classes
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.remove('dark-theme');
+            });
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.remove('dark-text');
+            });
+        });
+    </script>
+    <script>
+        // Define your carData object
+        const carData = {
+            'Standard Sedan': {
+                '00:00 to 01:00': 30,
+                '01:00 to 02:00': 25,
+                '02:00 to 03:00': 20,
+                '03:00 to 04:00': 15,
+                '04:00 to 05:00': 25,
+                '05:00 to 06:00': 35,
+                '06:00 to 07:00': 50,
+                '07:00 to 08:00': 75,
+                '08:00 to 09:00': 100,
+                '09:00 to 10:00': 120,
+                '10:00 to 11:00': 130,
+                '11:00 to 12:00': 140,
+                '12:00 to 13:00': 150,
+                '13:00 to 14:00': 160,
+                '14:00 to 15:00': 170,
+                '15:00 to 16:00': 200,
+                '16:00 to 17:00': 250,
+                '17:00 to 18:00': 300,
+                '18:00 to 19:00': 350,
+                '19:00 to 20:00': 400,
+                '20:00 to 21:00': 400,
+                '21:00 to 22:00': 380,
+                '22:00 to 23:00': 350,
+                '23:00 to 00:00': 300
+            },
+            'SUV': {
+                '00:00 to 01:00': 20,
+                '01:00 to 02:00': 15,
+                '02:00 to 03:00': 10,
+                '03:00 to 04:00': 10,
+                '04:00 to 05:00': 15,
+                '05:00 to 06:00': 20,
+                '06:00 to 07:00': 30,
+                '07:00 to 08:00': 40,
+                '08:00 to 09:00': 50,
+                '09:00 to 10:00': 60,
+                '10:00 to 11:00': 70,
+                '11:00 to 12:00': 80,
+                '12:00 to 13:00': 90,
+                '13:00 to 14:00': 100,
+                '14:00 to 15:00': 110,
+                '15:00 to 16:00': 120,
+                '16:00 to 17:00': 200,
+                '17:00 to 18:00': 250,
+                '18:00 to 19:00': 300,
+                '19:00 to 20:00': 300,
+                '20:00 to 21:00': 250,
+                '21:00 to 22:00': 200,
+                '22:00 to 23:00': 180,
+                '23:00 to 00:00': 150
+            },
+            'Luxury': {
+                '00:00 to 01:00': 13,
+                '01:00 to 02:00': 10,
+                '02:00 to 03:00': 7,
+                '03:00 to 04:00': 7,
+                '04:00 to 05:00': 10,
+                '05:00 to 06:00': 13,
+                '06:00 to 07:00': 20,
+                '07:00 to 08:00': 27,
+                '08:00 to 09:00': 33,
+                '09:00 to 10:00': 40,
+                '10:00 to 11:00': 47,
+                '11:00 to 12:00': 53,
+                '12:00 to 13:00': 60,
+                '13:00 to 14:00': 67,
+                '14:00 to 15:00': 73,
+                '15:00 to 16:00': 80,
+                '16:00 to 17:00': 133,
+                '17:00 to 18:00': 167,
+                '18:00 to 19:00': 200,
+                '19:00 to 20:00': 200,
+                '20:00 to 21:00': 167,
+                '21:00 to 22:00': 133,
+                '22:00 to 23:00': 120,
+                '23:00 to 00:00': 100
+            },
+            'Compact': {
+                '00:00 to 01:00': 67,
+                '01:00 to 02:00': 50,
+                '02:00 to 03:00': 33,
+                '03:00 to 04:00': 33,
+                '04:00 to 05:00': 50,
+                '05:00 to 06:00': 67,
+                '06:00 to 07:00': 100,
+                '07:00 to 08:00': 133,
+                '08:00 to 09:00': 167,
+                '09:00 to 10:00': 200,
+                '10:00 to 11:00': 233,
+                '11:00 to 12:00': 267,
+                '12:00 to 13:00': 300,
+                '13:00 to 14:00': 333,
+                '14:00 to 15:00': 367,
+                '15:00 to 16:00': 400,
+                '16:00 to 17:00': 667,
+                '17:00 to 18:00': 833,
+                '18:00 to 19:00': 1000,
+                '19:00 to 20:00': 1000,
+                '20:00 to 21:00': 833,
+                '21:00 to 22:00': 667,
+                '22:00 to 23:00': 600,
+                '23:00 to 00:00': 500
+            },
+            'Convertible': {
+                '00:00 to 01:00': 13,
+                '01:00 to 02:00': 10,
+                '02:00 to 03:00': 7,
+                '03:00 to 04:00': 7,
+                '04:00 to 05:00': 10,
+                '05:00 to 06:00': 13,
+                '06:00 to 07:00': 20,
+                '07:00 to 08:00': 27,
+                '08:00 to 09:00': 33,
+                '09:00 to 10:00': 40,
+                '10:00 to 11:00': 47,
+                '11:00 to 12:00': 53,
+                '12:00 to 13:00': 60,
+                '13:00 to 14:00': 67,
+                '14:00 to 15:00': 73,
+                '15:00 to 16:00': 80,
+                '16:00 to 17:00': 133,
+                '17:00 to 18:00': 167,
+                '18:00 to 19:00': 200,
+                '19:00 to 20:00': 200,
+                '20:00 to 21:00': 167,
+                '21:00 to 22:00': 133,
+                '22:00 to 23:00': 120,
+                '23:00 to 00:00': 100
+            },
+            'Hatchback': {
+                '00:00 to 01:00': 7,
+                '01:00 to 02:00': 5,
+                '02:00 to 03:00': 3,
+                '03:00 to 04:00': 3,
+                '04:00 to 05:00': 5,
+                '05:00 to 06:00': 7,
+                '06:00 to 07:00': 10,
+                '07:00 to 08:00': 13,
+                '08:00 to 09:00': 17,
+                '09:00 to 10:00': 20,
+                '10:00 to 11:00': 23,
+                '11:00 to 12:00': 27,
+                '12:00 to 13:00': 30,
+                '13:00 to 14:00': 33,
+                '14:00 to 15:00': 37,
+                '15:00 to 16:00': 40,
+                '16:00 to 17:00': 67,
+                '17:00 to 18:00': 83,
+                '18:00 to 19:00': 100,
+                '19:00 to 20:00': 100,
+                '20:00 to 21:00': 83,
+                '21:00 to 22:00': 67,
+                '22:00 to 23:00': 60,
+                '23:00 to 00:00': 50
+            },
+            'Minivan': {
+                '00:00 to 01:00': 33,
+                '01:00 to 02:00': 25,
+                '02:00 to 03:00': 17,
+                '03:00 to 04:00': 17,
+                '04:00 to 05:00': 25,
+                '05:00 to 06:00': 33,
+                '06:00 to 07:00': 50,
+                '07:00 to 08:00': 67,
+                '08:00 to 09:00': 83,
+                '09:00 to 10:00': 100,
+                '10:00 to 11:00': 117,
+                '11:00 to 12:00': 133,
+                '12:00 to 13:00': 150,
+                '13:00 to 14:00': 167,
+                '14:00 to 15:00': 183,
+                '15:00 to 16:00': 200,
+                '16:00 to 17:00': 333,
+                '17:00 to 18:00': 417,
+                '18:00 to 19:00': 500,
+                '19:00 to 20:00': 500,
+                '20:00 to 21:00': 417,
+                '21:00 to 22:00': 333,
+                '22:00 to 23:00': 300,
+                '23:00 to 00:00': 250
+            },
+            'Pickup Truck': {
+                '00:00 to 01:00': 7,
+                '01:00 to 02:00': 5,
+                '02:00 to 03:00': 3,
+                '03:00 to 04:00': 3,
+                '04:00 to 05:00': 5,
+                '05:00 to 06:00': 7,
+                '06:00 to 07:00': 10,
+                '07:00 to 08:00': 13,
+                '08:00 to 09:00': 17,
+                '09:00 to 10:00': 20,
+                '10:00 to 11:00': 23,
+                '11:00 to 12:00': 27,
+                '12:00 to 13:00': 30,
+                '13:00 to 14:00': 33,
+                '14:00 to 15:00': 37,
+                '15:00 to 16:00': 40,
+                '16:00 to 17:00': 67,
+                '17:00 to 18:00': 83,
+                '18:00 to 19:00': 100,
+                '19:00 to 20:00': 100,
+                '20:00 to 21:00': 83,
+                '21:00 to 22:00': 67,
+                '22:00 to 23:00': 60,
+                '23:00 to 00:00': 50
+            },
+            'Electric': {
+                '00:00 to 01:00': 13,
+                '01:00 to 02:00': 10,
+                '02:00 to 03:00': 7,
+                '03:00 to 04:00': 7,
+                '04:00 to 05:00': 10,
+                '05:00 to 06:00': 13,
+                '06:00 to 07:00': 20,
+                '07:00 to 08:00': 27,
+                '08:00 to 09:00': 33,
+                '09:00 to 10:00': 40,
+                '10:00 to 11:00': 47,
+                '11:00 to 12:00': 53,
+                '12:00 to 13:00': 60,
+                '13:00 to 14:00': 67,
+                '14:00 to 15:00': 73,
+                '15:00 to 16:00': 80,
+                '16:00 to 17:00': 133,
+                '17:00 to 18:00': 167,
+                '18:00 to 19:00': 200,
+                '19:00 to 20:00': 200,
+                '20:00 to 21:00': 167,
+                '21:00 to 22:00': 133,
+                '22:00 to 23:00': 120,
+                '23:00 to 00:00': 100
+            },
+            'Limousine': {
+                '00:00 to 01:00': 1,
+                '01:00 to 02:00': 1,
+                '02:00 to 03:00': 1,
+                '03:00 to 04:00': 1,
+                '04:00 to 05:00': 1,
+                '05:00 to 06:00': 1,
+                '06:00 to 07:00': 2,
+                '07:00 to 08:00': 3,
+                '08:00 to 09:00': 4,
+                '09:00 to 10:00': 5,
+                '10:00 to 11:00': 6,
+                '11:00 to 12:00': 7,
+                '12:00 to 13:00': 8,
+                '13:00 to 14:00': 9,
+                '14:00 to 15:00': 10,
+                '15:00 to 16:00': 11,
+                '16:00 to 17:00': 18,
+                '17:00 to 18:00': 22,
+                '18:00 to 19:00': 26,
+                '19:00 to 20:00': 26,
+                '20:00 to 21:00': 22,
+                '21:00 to 22:00': 18,
+                '22:00 to 23:00': 16,
+                '23:00 to 00:00': 13
+            }
+        };
+
+        // Your script goes here
+        function getCarsAvailability(interval) {
+            var availableCars = {};
+            for (var carType in carData) {
+                if (carData.hasOwnProperty(carType)) {
+                    var availability = carData[carType][interval];
+                    availableCars[carType] = availability;
+                }
+            }
+            return availableCars;
+        }
+
+        // Example usage:
+        var interval = '00:00 to 01:00';
+        var interval = '01:00 to 02:00';
+        var interval = '02:00 to 03:00';
+        var interval = '03:00 to 04:00';
+        var interval = '04:00 to 05:00';
+        var interval = '05:00 to 06:00';
+        var interval = '06:00 to 07:00';
+        var interval = '07:00 to 08:00';
+        var interval = '08:00 to 09:00';
+        var interval = '09:00 to 10:00';
+        var interval = '10:00 to 11:00';
+        var interval = '11:00 to 12:00';
+        var interval = '12:00 to 13:00';
+        var interval = '13:00 to 14:00';
+        var interval = '14:00 to 15:00';
+        var interval = '15:00 to 16:00';
+        var interval = '16:00 to 17:00';
+        var interval = '17:00 to 18:00';
+        var interval = '18:00 to 19:00';
+        var interval = '19:00 to 20:00';
+        var interval = '20:00 to 21:00';
+        var interval = '21:00 to 22:00';
+        var interval = '22:00 to 23:00';
+        var interval = '23:00 to 00:00';
+        var carsAvailable = getCarsAvailability(interval);
+        console.log(carsAvailable); // Output will be an object with car types and their availability in that interval
+
+        // Define a function to get the current time slot
+        function getCurrentTimeSlot() {
+            var now = new Date();
+            var currentHour = now.getHours();
+            var nextHour = (currentHour + 1) % 24; // Wrap around to 0 after 23
+            var currentTimeSlot = currentHour.toString().padStart(2, '0') + ':00 to ' + nextHour.toString().padStart(2, '0') + ':00';
+            return currentTimeSlot;
+        }
+
+        // Define a function to update the availability container with the available cars for the current time slot
+        function updateAvailability() {
+            // Get the current time slot
+            var currentTimeSlot = getCurrentTimeSlot();
+
+            // Get the availability container
+            var availabilityContainer = document.getElementById('availabilityContainer');
+
+            // Clear the previous content
+            availabilityContainer.innerHTML = '';
+
+            // Get the available cars for the current time slot
+            var carsAvailable = getCarsAvailability(currentTimeSlot);
+
+            // Create HTML content to display the available cars
+            var htmlContent = '<h3>Available Cars for ' + currentTimeSlot + '</h3>';
+            htmlContent += '<ul>';
+            for (var carType in carsAvailable) {
+                if (carsAvailable.hasOwnProperty(carType)) {
+                    htmlContent += '<li>' + carType + ': ' + carsAvailable[carType] + '</li>';
+                }
+            }
+            htmlContent += '</ul>';
+
+            // Update the availability container with the new content
+            availabilityContainer.innerHTML = htmlContent;
+        }
+
+        // Example usage:
+        var interval = '00:00 to 01:00';
+        var interval = '01:00 to 02:00';
+        var interval = '02:00 to 03:00';
+        var interval = '03:00 to 04:00';
+        var interval = '04:00 to 05:00';
+        var interval = '05:00 to 06:00';
+        var interval = '06:00 to 07:00';
+        var interval = '07:00 to 08:00';
+        var interval = '08:00 to 09:00';
+        var interval = '09:00 to 10:00';
+        var interval = '10:00 to 11:00';
+        var interval = '11:00 to 12:00';
+        var interval = '12:00 to 13:00';
+        var interval = '13:00 to 14:00';
+        var interval = '14:00 to 15:00';
+        var interval = '15:00 to 16:00';
+        var interval = '16:00 to 17:00';
+        var interval = '17:00 to 18:00';
+        var interval = '18:00 to 19:00';
+        var interval = '19:00 to 20:00';
+        var interval = '20:00 to 21:00';
+        var interval = '21:00 to 22:00';
+        var interval = '22:00 to 23:00';
+        var interval = '23:00 to 00:00';
+        updateAvailability(interval);
+
+    </script>
+    <script>
+        // Your Bing Maps API key
+        var key = 'AlX8tCxcfiX1m2J4Vqwu6uIPWhN0qyyCtu_9gzurpA4QPcgOfsDkMTdKuLnUjqia';
+
+        // Function to initialize autocomplete functionality
+        function initializeAutocomplete(inputId, suggestionsListId, map) {
+            var input = document.getElementById(inputId);
+            var suggestionsList = document.getElementById(suggestionsListId);
+
+            input.addEventListener('input', function() {
+                var query = input.value;
+                if (query.length > 0) {
+                    fetchSuggestions(query, suggestionsList);
+                } else {
+                    suggestionsList.innerHTML = '';
+                    suggestionsList.classList.remove('show-suggestions');
+                }
+            });
+
+            suggestionsList.addEventListener('click', function(event) {
+                var clickedSuggestion = event.target.closest('li');
+                if (clickedSuggestion) {
+                    input.value = clickedSuggestion.textContent;
+                    suggestionsList.innerHTML = ''; // Clear suggestions after selection
+                    suggestionsList.classList.remove('show-suggestions');
+                    // Update map center based on selected location
+                    updateMapCenter(map, inputId);
+                    // Update the polyline connecting locations
+                    updatePolyline(map);
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                suggestionsList.classList.add('show-suggestions');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!input.contains(event.target) && !suggestionsList.contains(event.target)) {
+                    suggestionsList.classList.remove('show-suggestions');
+                }
+            });
+        }
+
+        // Function to fetch suggestions from Bing Maps API
+        function fetchSuggestions(query, suggestionsList) {
+            var url = 'https://dev.virtualearth.net/REST/v1/Autosuggest?query=' + query + '&key=' + key;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var suggestions = data.resourceSets[0]?.resources[0]?.value || []; // Safely access nested properties
+                    displaySuggestions(suggestions, suggestionsList);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Function to display suggestions in dropdown
+        function displaySuggestions(suggestions, suggestionsList) {
+            suggestionsList.innerHTML = ''; // Clear previous suggestions
+            suggestions.forEach(function(suggestion) {
+                var suggestionItem = document.createElement('li');
+                var suggestionText = suggestion.name || suggestion.address?.formattedAddress || ''; // Safely access nested property
+                suggestionItem.textContent = suggestionText;
+                suggestionsList.appendChild(suggestionItem);
+            });
+            suggestionsList.classList.add('show-suggestions');
+        }
+
+        // Function to update map center based on selected location
+        function updateMapCenter(map, inputId) {
+            var input = document.getElementById(inputId);
+            var query = input.value;
+
+            var geocodeRequest = 'https://dev.virtualearth.net/REST/v1/Locations?query=' + query + '&key=' + key;
+
+            fetch(geocodeRequest)
+                .then(response => response.json())
+                .then(data => {
+                    var location = data.resourceSets[0]?.resources[0]?.point.coordinates || []; // Safely access nested properties
+                    if (location.length === 2) {
+                        var center = new Microsoft.Maps.Location(location[0], location[1]);
+                        map.setView({ center: center });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Function to update the polyline connecting locations
+        function updatePolyline(map) {
+            var startInput = document.getElementById('start');
+            var endInput = document.getElementById('end');
+
+            var startQuery = startInput.value;
+            var endQuery = endInput.value;
+
+            if (startQuery && endQuery) {
+                var startLocationPromise = getLocation(startQuery);
+                var endLocationPromise = getLocation(endQuery);
+
+                Promise.all([startLocationPromise, endLocationPromise])
+                    .then(function(locations) {
+                        var startLocation = locations[0];
+                        var endLocation = locations[1];
+                        if (startLocation && endLocation) {
+                            var polyline = new Microsoft.Maps.Polyline([startLocation, endLocation], {
+                                strokeColor: 'red',
+                                strokeThickness: 2
+                            });
+                            map.entities.clear();
+                            map.entities.push(polyline);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        // Function to get location coordinates from Bing Maps API
+        function getLocation(query) {
+            return new Promise(function(resolve, reject) {
+                var geocodeRequest = 'https://dev.virtualearth.net/REST/v1/Locations?query=' + query + '&key=' + key;
+
+                fetch(geocodeRequest)
+                    .then(response => response.json())
+                    .then(data => {
+                        var location = data.resourceSets[0]?.resources[0]?.point.coordinates || []; // Safely access nested properties
+                        if (location.length === 2) {
+                            var result = new Microsoft.Maps.Location(location[0], location[1]);
+                            resolve(result);
+                        } else {
+                            resolve(null);
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+        }
+    </script>
+    <script>
+        // Function to load Bing Maps API and initialize map
+        function loadMapScenario() {
+            var map = new Microsoft.Maps.Map(document.getElementById('map'), {
+                center: new Microsoft.Maps.Location(47.6062, -122.3321), // Default center (Seattle, WA)
+                zoom: 12 // Default zoom level
+            });
+
+            // Add a click event listener to the map to get coordinates on click
+            Microsoft.Maps.Events.addHandler(map, 'click', function(e) {
+                var location = e.location;
+                console.log('Clicked location:', location);
+                // You can use the clicked location for your application logic, such as setting pickup/dropoff points
+            });
+
+            // Initialize autocomplete for pickup and dropoff locations
+            initializeAutocomplete('start', 'startSuggestions', map);
+            initializeAutocomplete('end', 'endSuggestions', map);
+        }
+    </script>
+    <script src="https://www.bing.com/api/maps/mapcontrol?key=AlX8tCxcfiX1m2J4Vqwu6uIPWhN0qyyCtu_9gzurpA4QPcgOfsDkMTdKuLnUjqia&callback=loadMapScenario" async defer></script>
+</body>
+</html>
