@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarRentalX</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://rentsyst.com/assets/2cda8e3/img/svg/top-carsharing-img.svg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .thin-section {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .thin-section label {
+            padding: 5px 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .thin-section .dropdown {
+            margin-right: 10px;
+        }
+
+        .section {
+            background-color: #f0f0f0;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dark-theme {
+            background-color: #333;
+        }
+
+        .dark-text {
+            color: #fff;
+        }
+
+        /* Table styling */
+        .table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #3498db; /* Keep background color for headers */
+            color: #fff;
+        }
+
+        .table td {
+            background-color: #f0f0f0;
+            color: #333; /* Adjust text color */
+        }
+
+        /* Styles for the input group */
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Style for the input field */
+        .form-control {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: border-bottom-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-bottom-color: #3498db;
+        }
+
+        /* Style for the icon */
+        .input-group-addon {
+            font-size: 20px;
+            color: #555;
+            margin-right: 10px;
+        }
+
+        /* Dark theme styling */
+        .dark-theme {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Dark theme styling for table */
+        .dark-theme .table {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Light theme styling for table */
+        .light-theme .table {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="text-3xl font-bold">CarRentalX</h1>
+    </div>
+
+    <div class="thin-section">
+        <!-- Content for the thin section -->
+        <span class="mr-4">Welcome, {{ username }}</span>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Logout</button>
+        </form>
+        <div class="dropdown">
+            <button class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Theme</button>
+            <div class="dropdown-content">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Dark Theme</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Light Theme</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Content for the third section -->
+        <h2 class="text-2xl font-semibold mb-4">Explore More</h2>
+        <ul class="flex flex-wrap justify-center">
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('home') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Home</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('booking_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Booking Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('browse_vehicles') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Browse Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('manage_bookings') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Manage Bookings</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pickup_dropoff') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Select Pickup and Dropoff Locations</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('vehicle_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Vehicle Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pricing') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">View Pricing of Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('book_vehicle') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Book Vehicle</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label for="start">Pickup Point:</label></td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                            <input type="text" id="start" class="form-control" placeholder="Enter pickup point">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><ul id="startSuggestions"></ul></td>
+                </tr>
+                <tr>
+                    <td><label for="end">Dropoff Point:</label></td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                            <input type="text" id="end" class="form-control" placeholder="Enter dropoff point">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><ul id="endSuggestions"></ul></td>
+                </tr>
+                <tr>
+                    <td><label for="car">Select Car:</label></td>
+                    <td>
+    <div class="custom-select">
+        <select id="car">
+            <option value="Standard Sedan">Standard Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Compact">Compact</option>
+            <option value="Convertible">Convertible</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Minivan">Minivan</option>
+            <option value="Pickup Truck">Pickup Truck</option>
+            <option value="Electric">Electric</option>
+            <option value="Limousine">Limousine</option>
+        </select>
+    </div>
+</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button onclick="calculateRoute()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Calculate Route
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="travelTime">Travel Time:</label></td>
+                    <td id="travelTime"></td>
+                </tr>
+                <tr>
+                    <td><label for="estimatedPrice">Estimated Price:</label></td>
+                    <td id="estimatedPrice"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Content for the section below the table -->
+        <button onclick="confirmBooking()" id="confirmRideBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Confirm Your Ride
+        </button>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Tagline for the project -->
+        <h2 class="text-2xl font-semibold mb-4">Your Trusted Car Rental Partner</h2>
+        <!-- Image -->
+        <img src="https://rentsyst.com/assets/5621b12e/img/svg/top-leasing-img.svg" alt="Leasing Image" class="mx-auto max-w-full mt-4">
+    </div>
+
+
+    <script>
+        var key = 'AlX8tCxcfiX1m2J4Vqwu6uIPWhN0qyyCtu_9gzurpA4QPcgOfsDkMTdKuLnUjqia';
+    
+        var carData = [
+            { name: "Standard Sedan", price_per_hour: 1500 },
+            { name: "SUV", price_per_hour: 2500 },
+            { name: "Luxury", price_per_hour: 4000 },
+            { name: "Compact", price_per_hour: 1200 },
+            { name: "Convertible", price_per_hour: 3000 },
+            { name: "Hatchback", price_per_hour: 1000 },
+            { name: "Minivan", price_per_hour: 2000 },
+            { name: "Pickup Truck", price_per_hour: 3000 },
+            { name: "Electric", price_per_hour: 3500 },
+            { name: "Limousine", price_per_hour: 5000 }
+        ];
+    
+        function initializeAutocomplete(inputId, suggestionsListId) {
+            var input = document.getElementById(inputId);
+            var suggestionsList = document.getElementById(suggestionsListId);
+    
+            input.addEventListener('input', function() {
+                var query = input.value;
+                if (query.length > 0) {
+                    fetchSuggestions(query, suggestionsList);
+                } else {
+                    suggestionsList.innerHTML = '';
+                }
+            });
+    
+            suggestionsList.addEventListener('click', function(event) {
+                var clickedSuggestion = event.target.closest('li');
+                if (clickedSuggestion) {
+                    input.value = clickedSuggestion.textContent;
+                    suggestionsList.innerHTML = ''; // Clear suggestions after selection
+                }
+            });
+        }
+    
+        function fetchSuggestions(query, suggestionsList) {
+            var url = 'https://dev.virtualearth.net/REST/v1/Autosuggest?query=' + query + '&key=' + key;
+    
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var suggestions = data.resourceSets[0]?.resources[0]?.value || []; // Safely access nested properties
+                    displaySuggestions(suggestions, suggestionsList);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    
+        function displaySuggestions(suggestions, suggestionsList) {
+            suggestionsList.innerHTML = ''; // Clear previous suggestions
+            suggestions.forEach(function(suggestion) {
+                var suggestionItem = document.createElement('li');
+                var suggestionText = suggestion.name || suggestion.address?.formattedAddress || ''; // Safely access nested property
+                suggestionItem.textContent = suggestionText;
+                suggestionsList.appendChild(suggestionItem);
+            });
+        }
+    
+        function calculateRoute() {
+            var start = document.getElementById('start').value;
+            var end = document.getElementById('end').value;
+            var selectedCar = document.getElementById('car').value;
+    
+            var url = 'https://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=' + start + '&wp.1=' + end + '&key=' + key;
+    
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var travelDuration = data.resourceSets[0]?.resources[0]?.travelDuration / 3600 || 0; // Safely access nested properties
+                    var selectedCarPrice = carData.find(car => car.name === selectedCar)?.price_per_hour || 0; // Safely access nested properties
+                    var estimatedPrice = travelDuration * selectedCarPrice;
+    
+                    document.getElementById('travelTime').textContent = 'Estimated travel time: ' + travelDuration.toFixed(2) + ' hours';
+                    document.getElementById('estimatedPrice').textContent = 'Estimated price: ₹' + estimatedPrice.toFixed(2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    
+        window.onload = function() {
+            initializeAutocomplete('start', 'startSuggestions');
+            initializeAutocomplete('end', 'endSuggestions');
+        };
+    
+        $(document).ready(function() {
+            $('#confirmRideBtn').click(function() {
+                // Fetch data from the form fields
+                var start = $('#start').val();
+                var end = $('#end').val();
+                var car = $('#car').val();
+    
+                // Construct the data object
+                var data = {
+                    start: start,
+                    end: end,
+                    car: car
+                    // Add more fields if needed
+                };
+    
+                // Send the booking data to the server
+                $.ajax({
+                    type: 'POST',
+                    url: '/book_vehicle',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        // Handle success response
+                        alert('Booking successful!');
+                        // Redirect or perform any other action as needed
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        alert('Error: ' + error);
+                    }
+                });
+            });
+        });
+    
+        // Function to handle confirming booking
+        function confirmBooking() {
+            // Fetch data from the table
+            var start = document.getElementById('start').value;
+            var end = document.getElementById('end').value;
+            var car = document.getElementById('car').value;
+            var travelTime = document.getElementById('travelTime').textContent;
+            var estimatedPrice = document.getElementById('estimatedPrice').textContent;
+    
+            // Construct the query string
+            var queryString = '?start=' + encodeURIComponent(start) +
+                            '&end=' + encodeURIComponent(end) +
+                            '&car=' + encodeURIComponent(car) +
+                            '&travelTime=' + encodeURIComponent(travelTime) +
+                            '&estimatedPrice=' + encodeURIComponent(estimatedPrice);
+    
+            // Redirect the user to the booking details page with the query string
+            window.location.href = "{{ url_for('booking_details') }}" + queryString;
+        }
+    
+        // Get the dropdown content and buttons
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const darkThemeBtn = dropdownContent.querySelector('a:nth-child(1)');
+        const lightThemeBtn = dropdownContent.querySelector('a:nth-child(2)');
+    
+        // Dark theme functionality
+        darkThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Change background color of sections
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.add('dark-theme');
+            });
+            // Change text color
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.add('dark-text');
+            });
+            // Apply dark theme to table components
+            document.querySelectorAll('.table, input, select, button').forEach(el => {
+                el.classList.add('dark-theme');
+            });
+            // Add dark theme class to body
+            document.body.classList.add('dark-theme');
+        });
+    
+        // Light theme functionality
+        lightThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove dark theme classes
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.remove('dark-theme');
+            });
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.remove('dark-text');
+            });
+            // Apply light theme to table components
+            document.querySelectorAll('.table, input, select, button').forEach(el => {
+                el.classList.remove('dark-theme');
+            });
+            // Remove dark theme class from body
+            document.body.classList.remove('dark-theme');
+        });
+    </script>
+    
+    <div class="footer">
+        <p>&copy; 2024 CarRentalX. All rights reserved.</p>
+    </div>
+</body>
+</html>

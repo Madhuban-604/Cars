@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarRentalX - Pricing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://rentsyst.com/assets/2cda8e3/img/svg/top-carsharing-img.svg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .thin-section {
+            background-color: #f0f0f0; /* Updated background color */
+            padding: 10px 20px; /* Adjusted padding */
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .thin-section label {
+            padding: 5px 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .thin-section .dropdown {
+            margin-right: 10px;
+        }
+
+        .section {
+            background-color: #f0f0f0;  /* Adjusted background color */
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Dark theme */
+        .dark-theme {
+            background-color: #333;
+        }
+
+        .dark-text {
+            color: #fff;
+        }
+
+        /* Pricing Table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .pricing-table th, .pricing-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .pricing-table th {
+            background-color: #3498db;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .pricing-table tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .car-details {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .car-name:hover .car-details {
+            display: block;
+        }
+
+        .car-name:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="text-3xl font-bold">CarRentalX</h1>
+    </div>
+
+    <div class="thin-section">
+        <!-- Content for the thin section -->
+        <span class="mr-4">Welcome, {{ username }}</span>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Logout</button>
+        </form>
+        <div class="dropdown">
+            <button class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Theme</button>
+            <div class="dropdown-content">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Dark Theme</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Light Theme</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Content for the third section -->
+        <h2 class="text-2xl font-semibold mb-4">Explore More</h2>
+        <ul class="flex flex-wrap justify-center">
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('home') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Home</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('booking_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Booking Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('browse_vehicles') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Browse Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('manage_bookings') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Manage Bookings</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pickup_dropoff') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Select Pickup and Dropoff Locations</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('vehicle_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Vehicle Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pricing') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">View Pricing of Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('book_vehicle') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Book Vehicle</a>
+            </li>
+        </ul>
+    </div>
+    
+
+    <!-- Pricing Section -->
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-4">Vehicle Pricing</h2>
+        <table class="pricing-table">
+            <tr>
+                <th>Vehicle Type</th>
+                <th>Price per Hour (INR)</th>
+            </tr>
+            <tr>
+                <td class="car-name">Standard Sedan<span class="car-details">Basic Sedan Car</span></td>
+                <td>₹ 1500</td>
+            </tr>
+            <tr>
+                <td class="car-name">SUV<span class="car-details">Sport Utility Vehicle</span></td>
+                <td>₹ 2500</td>
+            </tr>
+            <tr>
+                <td class="car-name">Luxury<span class="car-details">Luxury High-End Car</span></td>
+                <td>₹ 4000</td>
+            </tr>
+            <tr>
+                <td class="car-name">Compact<span class="car-details">Small, Economical Car</span></td>
+                <td>₹ 1200</td>
+            </tr>
+            <tr>
+                <td class="car-name">Convertible<span class="car-details">Convertible Roof Car</span></td>
+                <td>₹ 3000</td>
+            </tr>
+            <tr>
+                <td class="car-name">Hatchback<span class="car-details">Small Car with Rear Door</span></td>
+                <td>₹ 1000</td>
+            </tr>
+            <tr>
+                <td class="car-name">Minivan<span class="car-details">Spacious Family Car</span></td>
+                <td>₹ 2000</td>
+            </tr>
+            <tr>
+                <td class="car-name">Pickup Truck<span class="car-details">Utility Vehicle with Open Bed</span></td>
+                <td>₹ 3000</td>
+            </tr>
+            <tr>
+                <td class="car-name">Electric<span class="car-details">Electric-Powered Car</span></td>
+                <td>₹ 3500</td>
+            </tr>
+            <tr>
+                <td class="car-name">Limousine<span class="car-details">Luxury Sedan with Extended Wheelbase</span></td>
+                <td>₹ 5000</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 CarRentalX. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Get the dropdown content and buttons
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const darkThemeBtn = dropdownContent.querySelector('a:nth-child(1)');
+        const lightThemeBtn = dropdownContent.querySelector('a:nth-child(2)');
+
+        // Dark theme functionality
+        darkThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Change background color of sections
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.add('dark-theme');
+            });
+            // Change text color
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.add('dark-text');
+            });
+        });
+
+        // Light theme functionality
+        lightThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove dark theme classes
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.remove('dark-theme');
+            });
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.remove('dark-text');
+            });
+        });
+    </script>
+</body>
+</html>

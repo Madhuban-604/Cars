@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarRentalX</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Existing styles */
+        body {
+            background-image: url('https://rentsyst.com/assets/2cda8e3/img/svg/top-carsharing-img.svg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    
+        .header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    
+        .thin-section {
+            background-color: #f0f0f0; /* Updated background color */
+            padding: 10px 20px; /* Adjusted padding */
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+    
+        .thin-section label {
+            padding: 5px 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    
+        .thin-section .dropdown {
+            margin-right: 10px;
+        }
+    
+        .section {
+            background-color: #f0f0f0;  /* Adjusted background color */
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+    
+        .footer {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+    
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+    
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+    
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+    
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+    
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    
+        /* Dark theme styles */
+        .dark-theme {
+            background-color: #333;
+        }
+    
+        .dark-text {
+            color: #fff;
+        }
+    
+        .dark-theme .dropdown-content {
+            background-color: #000;
+        }
+    
+        .dark-theme .dropdown-content a {
+            color: #fff;
+        }
+    
+        .dark-theme .dropdown-content a:hover {
+            background-color: #555;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="header">
+        <h1 class="text-3xl font-bold">CarRentalX</h1>
+    </div>
+
+    <div class="thin-section">
+        <!-- Content for the thin section -->
+        <span class="mr-4">Welcome, {{ username }}</span>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Logout</button>
+        </form>
+        <div class="dropdown">
+            <button class="text-sm font-semibold py-2 px-4 rounded bg-transparent border border-gray-500 hover:bg-gray-200 transition duration-300">Theme</button>
+            <div class="dropdown-content">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Dark Theme</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-500 hover:text-white">Light Theme</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section bg-gray-100 py-6 px-8 rounded-lg shadow-md text-center">
+        <!-- Content for the third section -->
+        <h2 class="text-2xl font-semibold mb-4">Explore More</h2>
+        <ul class="flex flex-wrap justify-center">
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('home') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Home</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('booking_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Booking Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('browse_vehicles') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Browse Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('manage_bookings') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Manage Bookings</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pickup_dropoff') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Select Pickup and Dropoff Locations</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('vehicle_details') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Vehicle Details</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('pricing') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">View Pricing of Vehicles</a>
+            </li>
+            <li class="mr-6 mb-4">
+                <a href="{{ url_for('book_vehicle') }}" class="text-blue-500 hover:text-blue-600 transition duration-300">Book Vehicle</a>
+            </li>
+        </ul>
+    </div>    
+
+    <div class="section bg-gray-100 py-20 px-6 rounded-lg shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-4">Know your vehicle</h2> <!-- Added header -->
+        <label for="vehicles">Select a Vehicle:</label>
+        <select id="vehicles" onchange="displayVehicleData(getVehicleData(this.value))" class="block mx-auto mb-4">
+            <option value="Standard Sedan">Standard Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Compact">Compact</option>
+            <option value="Convertible">Convertible</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Minivan">Minivan</option>
+            <option value="Pickup Truck">Pickup Truck</option>
+            <option value="Electric">Electric</option>
+            <option value="Limousine">Limousine</option>
+        </select>
+        <div class="vehicle-details-container flex items-center justify-center">
+            <div class="vehicle-image mr-6">
+                <img id="vehicleImg" src="" alt="Vehicle Image" style="width: 750px; height: 350px;"> <!-- Set image size to 250x250 pixels -->
+            </div>
+            <div class="vehicle-info text-left"> <!-- Added text-left class for proper indentation -->
+                <h2 id="model">Model: </h2>
+                <p id="year">Year: </p>
+                <p id="price">Price per Hour: </p>
+                <p id="capacity">Capacity: </p>
+                <p id="description">Description: </p>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- New section with provided image -->
+    <div class="section bg-gray-100 py-20 px-6 rounded-lg shadow-md text-center">
+        <img src="https://rentsyst.com/assets/5621b12e/img/svg/rental-img.svg" alt="Rental Image" class="mx-auto">
+    </div>
+       
+    <footer class="footer">
+        <p>&copy; 2024 Car Sharing System</p>
+    </footer>
+    
+
+    <script>
+        // Get the dropdown content and buttons
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const darkThemeBtn = dropdownContent.querySelector('a:nth-child(1)');
+        const lightThemeBtn = dropdownContent.querySelector('a:nth-child(2)');
+
+        // Dark theme functionality
+        darkThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Change background color of sections
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.add('dark-theme');
+            });
+            // Change text color
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.add('dark-text');
+            });
+        });
+
+        // Light theme functionality
+        lightThemeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove dark theme classes
+            document.querySelectorAll('.section, .thin-section').forEach(section => {
+                section.classList.remove('dark-theme');
+            });
+            document.querySelectorAll('.section, .thin-section').forEach(el => {
+                el.classList.remove('dark-text');
+            });
+        });
+
+        function getVehicleData(vehicle) {
+            const vehicleData = {
+                "Standard Sedan": {
+                    image: "https://hips.hearstapps.com/hmg-prod/images/2019-honda-civic-sedan-1558453497.jpg",
+                    model: "Basic Sedan Car",
+                    year: "2022",
+                    price: "₹1500",
+                    capacity: "5",
+                    description: "Standard sedans are versatile vehicles suitable for everyday commuting and small families. They offer a comfortable ride and economical fuel consumption."
+                },
+                "SUV": {
+                    image: "https://imgd.aeplcdn.com/600x337/n/cw/ec/42355/xuv700-exterior-right-front-three-quarter-3.jpeg?isig=0&q=80",
+                    model: "Sport Utility Vehicle",
+                    year: "2023",
+                    price: "₹2500",
+                    capacity: "7",
+                    description: "SUVs are robust vehicles designed to tackle various terrains and weather conditions. They offer ample space for passengers and cargo, making them ideal for outdoor adventures and family trips."
+                },
+                "Luxury": {
+                    image: "https://imgd.aeplcdn.com/600x337/n/cw/ec/153319/range-rover-velar-exterior-right-front-three-quarter-4.jpeg?isig=0&q=80",
+                    model: "Luxury High-End Car",
+                    year: "2024",
+                    price: "₹4000",
+                    capacity: "5",
+                    description: "Luxury cars combine premium features, advanced technology, and superior performance. They provide a lavish driving experience with unmatched comfort, style, and sophistication."
+                },
+                "Compact": {
+                    image: "https://c.ndtvimg.com/2022-03/g2c3jgvo_car_625x300_22_March_22.jpg",
+                    model: "Small, Economical Car",
+                    year: "2022",
+                    price: "₹1200",
+                    capacity: "4",
+                    description: "Compact cars are ideal for city driving and short trips. They offer fuel efficiency and easy maneuverability, making them suitable for urban commuters and budget-conscious travelers."
+                },
+                "Convertible": {
+                    image: "https://imgd.aeplcdn.com/600x337/n/cw/ec/148919/amg-sl55-roadster-exterior-right-front-three-quarter-2.jpeg?isig=0&q=80",
+                    model: "Convertible Roof Car",
+                    year: "2023",
+                    price: "₹3000",
+                    capacity: "4",
+                    description: "Convertibles provide an exhilarating driving experience with the option to enjoy open-air motoring. They are perfect for leisurely drives and exploring scenic routes."
+                },
+                "Hatchback": {
+                    image: "https://imgd.aeplcdn.com/664x374/n/cw/ec/34561/cooper-convertible-exterior-right-front-three-quarter-2.jpeg?q=80",
+                    model: "Small Car with Rear Door",
+                    year: "2022",
+                    price: "₹1000",
+                    capacity: "4",
+                    description: "                Hatchbacks offer a compact yet practical solution for daily commuting and city driving. They feature a rear door that provides easy access to cargo space, making them versatile for various tasks."
+                },
+                "Minivan": {
+                    image: "https://www.mynrma.com.au/-/media/car-reviews/kia/mobile-banner-family-wagon.jpg?h=360&w=640&hash=852b2324eec087a735959f1a42cee098",
+                    model: "Spacious Family Car",
+                    year: "2023",
+                    price: "₹2000",
+                    capacity: "7",
+                    description: "Minivans are ideal for families and group travel, offering ample seating and cargo space. They provide comfort and convenience for long journeys and city outings."
+                },
+                "Pickup Truck": {
+                    image: "https://auto.mahindra.com/-/media/project/mahindra/dotcom/mahindra/gallery-brandpage/bolero-pik-up/30.jpg?rev=de879ba7fafc491fbd385e40c6b2349c",
+                    model: "Utility Vehicle with Open Bed",
+                    year: "2024",
+                    price: "₹3000",
+                    capacity: "5",
+                    description: "Pickup trucks are versatile vehicles suitable for transporting goods and equipment. They offer a spacious open bed for carrying cargo, making them essential for construction, landscaping, and recreational activities."
+                },
+                "Electric": {
+                    image: "https://imgd.aeplcdn.com/310x174/n/cw/ec/125193/comet-ev-exterior-right-side-view-23.jpeg?isig=0&q=80",
+                    model: "Electric-Powered Car",
+                    year: "2023",
+                    price: "₹3500",
+                    capacity: "5",
+                    description: "Electric cars are eco-friendly vehicles powered by electric motors. They                     produce zero emissions and offer a quiet, smooth driving experience. They are suitable for urban commuting and contribute to reducing carbon footprint and air pollution."
+                },
+                "Limousine": {
+                    image: "https://5.imimg.com/data5/WZ/JV/DF/SELLER-746073/6-500x500.png",
+                    model: "Luxury Sedan with Extended Wheelbase",
+                    year: "2024",
+                    price: "₹5000",
+                    capacity: "6",
+                    description: "Limousines are premium luxury vehicles known for their spacious interiors and chauffeur-driven service. They offer utmost comfort, style, and sophistication, making them ideal for special events, corporate travel, and VIP transportation."
+                }
+            };
+            return vehicleData[vehicle];
+        }
+
+        function displayVehicleData(data) {
+            const vehicleImg = document.getElementById("vehicleImg");
+            const model = document.getElementById("model");
+            const year = document.getElementById("year");
+            const price = document.getElementById("price");
+            const capacity = document.getElementById("capacity");
+            const description = document.getElementById("description");
+
+            vehicleImg.src = data.image;
+            model.textContent = "Model: " + data.model;
+            year.textContent = "Year: " + data.year;
+            price.textContent = "Price per Hour: " + data.price;
+            capacity.textContent = "Capacity: " + data.capacity;
+            description.textContent = "Description: " + data.description;
+        }
+
+        // Initial display
+        displayVehicleData(getVehicleData("Standard Sedan"));
+    </script>
+</body>
+</html>
